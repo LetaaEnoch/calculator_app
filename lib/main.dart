@@ -25,6 +25,7 @@ class CalculatorApp extends StatelessWidget {
 }
 
 class CalculatorHome extends StatefulWidget {
+  //This is the shell class for the home page
   const CalculatorHome({super.key});
 
   @override
@@ -34,13 +35,20 @@ class CalculatorHome extends StatefulWidget {
 }
 
 class _CalculatorHomeState extends State<CalculatorHome> {
+  //This is the class that actually defines the state of the home page
+
+  //Below is a list of relevant variables
   List<String> input = [];
   String result = '';
   GrammarParser p = GrammarParser();
 
   Widget buildButton(String value) {
+    //This function returns a widget, an ElevatedButton. It is gonna be called inside
+    //each button in the GridView.
+
     return ElevatedButton(
       onPressed: () {
+        //onButtonPressed is a crucial function we define hereafter
         onButtonPressed(value);
       },
       child: Text(
@@ -51,27 +59,46 @@ class _CalculatorHomeState extends State<CalculatorHome> {
   }
 
   void onButtonPressed(String val) {
+    //This function is the core of the app functionality. It detects the button that has
+    //been pressed, and thereafter determines the course of action that should follow
+    //e.g numbers or operator symbols pressed should be added to the input string, while
+    //the '=' sign when pressed trigger evaluation of the input expression.
     setState(() {
       if (val == 'C') {
+        //clear the input and result
         input = [];
         result = '';
       } else if (val == '=') {
-        Expression exp = p.parse(input.join());
-        ContextModel cm = ContextModel();
-        double x = exp.evaluate(EvaluationType.REAL, cm);
-        result = x.toString();
-        input = [];
+        try {
+          //high possibility of error here, from user input.
+          //Run cautiously with exception handling.
+          Expression exp = p.parse(input.join());
+          ContextModel cm = ContextModel();
+          double x = exp.evaluate(EvaluationType.REAL, cm);
+          result = x.toString();
+          input = [];
+        } catch (e) {
+          result = 'Syntax Error';
+          input = [];
+        }
       } else if (val == 'M') {
+        //'M' in this case means '000
         for (int i = 0; i < 3; i++) {
+          //Use a for-loop because we want each 0 to be added individually rather than
+          //three zeros at once (000). When the user presses the delete button (←),
+          //all three zeros are deleted at once if they were entered at once as a string.
           input.add('0');
         }
       } else if (val == '×') {
         input.add('*');
       } else if (val == '÷') {
         input.add('/');
+      } else if (val == '%') {
+        input.add('/100');
       } else if (val == '←') {
         input.removeLast();
       } else {
+        //If any other character is pressed (in this case, numbers).
         input.add(val);
       }
     });
@@ -102,7 +129,7 @@ class _CalculatorHomeState extends State<CalculatorHome> {
             ),
             SizedBox(height: 20),
             GridView.count(
-              crossAxisCount: 4,
+              crossAxisCount: 4, //max 4 widgets in a row
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               mainAxisSpacing: 10,
