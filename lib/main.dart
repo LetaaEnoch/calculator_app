@@ -53,6 +53,9 @@ class _CalculatorHomeState extends State<CalculatorHome> {
         result = '';
       } else if (val == '=') {
         result = input;
+        input = '';
+      } else if (val == 'M') {
+        input += '000';
       } else {
         input += val;
       }
@@ -70,20 +73,20 @@ class _CalculatorHomeState extends State<CalculatorHome> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         centerTitle: true,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          //SizedBox(height: 20),
-          Text(input, style: TextStyle(fontSize: 30)),
-          SizedBox(height: 20),
-          Text(
-            result,
-            style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: GridView.count(
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            //SizedBox(height: 20),
+            Text(input, style: TextStyle(fontSize: 30)),
+            SizedBox(height: 20),
+            Text(
+              result,
+              style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 20),
+            GridView.count(
               crossAxisCount: 4,
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
@@ -113,8 +116,8 @@ class _CalculatorHomeState extends State<CalculatorHome> {
                 //SizedBox(height: 1),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
