@@ -1,4 +1,7 @@
+// import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 void main() {
   runApp(CalculatorApp());
@@ -31,8 +34,9 @@ class CalculatorHome extends StatefulWidget {
 }
 
 class _CalculatorHomeState extends State<CalculatorHome> {
-  String input = '';
+  List<String> input = [];
   String result = '';
+  GrammarParser p = GrammarParser();
 
   Widget buildButton(String value) {
     return ElevatedButton(
@@ -49,15 +53,26 @@ class _CalculatorHomeState extends State<CalculatorHome> {
   void onButtonPressed(String val) {
     setState(() {
       if (val == 'C') {
-        input = '';
+        input = [];
         result = '';
       } else if (val == '=') {
-        result = input;
-        input = '';
+        Expression exp = p.parse(input.join());
+        ContextModel cm = ContextModel();
+        double x = exp.evaluate(EvaluationType.REAL, cm);
+        result = x.toString();
+        input = [];
       } else if (val == 'M') {
-        input += '000';
+        for (int i = 0; i < 3; i++) {
+          input.add('0');
+        }
+      } else if (val == '×') {
+        input.add('*');
+      } else if (val == '÷') {
+        input.add('/');
+      } else if (val == '←') {
+        input.removeLast();
       } else {
-        input += val;
+        input.add(val);
       }
     });
   }
@@ -79,7 +94,7 @@ class _CalculatorHomeState extends State<CalculatorHome> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             //SizedBox(height: 20),
-            Text(input, style: TextStyle(fontSize: 30)),
+            Text(input.join(), style: TextStyle(fontSize: 30)),
             SizedBox(height: 20),
             Text(
               result,
@@ -104,7 +119,7 @@ class _CalculatorHomeState extends State<CalculatorHome> {
                 buildButton('4'),
                 buildButton('5'),
                 buildButton('6'),
-                buildButton('x'),
+                buildButton('×'),
                 buildButton('7'),
                 buildButton('8'),
                 buildButton('9'),
