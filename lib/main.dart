@@ -27,18 +27,11 @@ class CalculatorHome extends StatefulWidget {
 }
 
 class _CalculatorHomeState extends State<CalculatorHome> {
-  int _counter = 0;
+  String input = '';
+  String result = '';
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  void _decrementCounter() {
-    setState(() {
-      _counter--;
-    });
+  Widget buildButton(String value) {
+    return ElevatedButton(onPressed: () {}, child: Text(value));
   }
 
   @override
@@ -52,28 +45,48 @@ class _CalculatorHomeState extends State<CalculatorHome> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         centerTitle: true,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('$_counter', style: Theme.of(context).textTheme.displayLarge),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                OutlinedButton(
-                  onPressed: _decrementCounter,
-                  child: Icon(Icons.remove),
-                ),
-                SizedBox(width: 20),
-                OutlinedButton(
-                  onPressed: _incrementCounter,
-                  child: Icon(Icons.add),
-                ),
-              ],
+      body: Column(
+        //mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          //SizedBox(height: 20),
+          Text(input, style: TextStyle(fontSize: 30)),
+          Text(
+            result,
+            style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+          ),
+          //SizedBox(height: 20),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GridView.count(
+                crossAxisCount: 4,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+                children: [
+                  buildButton('1'),
+                  buildButton('2'),
+                  buildButton('3'),
+                  buildButton('÷'),
+                  buildButton('4'),
+                  buildButton('5'),
+                  buildButton('6'),
+                  buildButton('x'),
+                  buildButton('7'),
+                  buildButton('8'),
+                  buildButton('9'),
+                  buildButton('-'),
+                  buildButton('.'),
+                  buildButton('0'),
+                  buildButton('+'),
+                  buildButton('='),
+                  //SizedBox(height: 50),
+                ],
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
