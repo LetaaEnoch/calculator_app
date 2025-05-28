@@ -96,7 +96,11 @@ class _CalculatorHomeState extends State<CalculatorHome> {
       } else if (val == '%') {
         input.add('/100');
       } else if (val == '←') {
-        input.removeLast();
+        try {
+          input.removeLast();
+        } catch (e) {
+          result = 'Invalid input';
+        }
       } else {
         //If any other character is pressed (in this case, numbers).
         input.add(val);
