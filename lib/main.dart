@@ -57,7 +57,7 @@ class _CalculatorHomeState extends State<CalculatorHome> {
         value,
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: isPortrait ? 35 : 20,
+          fontSize: isPortrait ? 27 : 20,
         ),
       ),
     );
