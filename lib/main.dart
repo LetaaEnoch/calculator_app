@@ -41,6 +41,7 @@ class _CalculatorHomeState extends State<CalculatorHome> {
   List<String> input = [];
   String result = '';
   GrammarParser p = GrammarParser();
+  bool isPortrait = true;
 
   Widget buildButton(String value) {
     //This function returns a widget, an ElevatedButton. It is gonna be called inside
@@ -51,9 +52,13 @@ class _CalculatorHomeState extends State<CalculatorHome> {
         //onButtonPressed is a crucial function we define hereafter
         onButtonPressed(value);
       },
+
       child: Text(
         value,
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: isPortrait ? 35 : 20,
+        ),
       ),
     );
   }
@@ -96,10 +101,10 @@ class _CalculatorHomeState extends State<CalculatorHome> {
       } else if (val == '%') {
         input.add('/100');
       } else if (val == '←') {
-        try {
+        if (input.isEmpty == true) {
+          result = 'Input clear';
+        } else {
           input.removeLast();
-        } catch (e) {
-          result = 'Invalid input';
         }
       } else {
         //If any other character is pressed (in this case, numbers).
@@ -119,52 +124,116 @@ class _CalculatorHomeState extends State<CalculatorHome> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            //SizedBox(height: 20),
-            Text(input.join(), style: TextStyle(fontSize: 30)),
-            SizedBox(height: 20),
-            Text(
-              result,
-              style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 20),
-            GridView.count(
-              crossAxisCount: 4, //max 4 widgets in a row
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              mainAxisSpacing: 10,
-              crossAxisSpacing: 10,
-              children: [
-                buildButton('%'),
-                buildButton('M'),
-                buildButton('C'),
-                buildButton('←'),
-                buildButton('1'),
-                buildButton('2'),
-                buildButton('3'),
-                buildButton('÷'),
-                buildButton('4'),
-                buildButton('5'),
-                buildButton('6'),
-                buildButton('×'),
-                buildButton('7'),
-                buildButton('8'),
-                buildButton('9'),
-                buildButton('-'),
-                buildButton('.'),
-                buildButton('0'),
-                buildButton('+'),
-                buildButton('='),
-                //SizedBox(height: 1),
-              ],
-            ),
-          ],
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            isPortrait = constraints.maxHeight > constraints.maxWidth;
+
+            return Padding(
+              padding: EdgeInsetsGeometry.all(10),
+              child: isPortrait ? buildPortrait() : buildLandscape(),
+            );
+          },
         ),
       ),
+    );
+  }
+
+  Widget buildPortrait() {
+    ///Build this layout if LayoutBuilder widget detects the device is in portrait mode
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        //SizedBox(height: 20),
+        Text(input.join(), style: TextStyle(fontSize: 30)),
+        SizedBox(height: 20),
+        Text(
+          result,
+          style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 20),
+        GridView.count(
+          crossAxisCount: 4, //max 4 widgets in a row
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
+          children: [
+            buildButton('%'),
+            buildButton('M'),
+            buildButton('C'),
+            buildButton('←'),
+            buildButton('1'),
+            buildButton('2'),
+            buildButton('3'),
+            buildButton('÷'),
+            buildButton('4'),
+            buildButton('5'),
+            buildButton('6'),
+            buildButton('×'),
+            buildButton('7'),
+            buildButton('8'),
+            buildButton('9'),
+            buildButton('-'),
+            buildButton('.'),
+            buildButton('0'),
+            buildButton('+'),
+            buildButton('='),
+            //SizedBox(height: 1),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget buildLandscape() {
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            children: [
+              Text(input.join(), style: TextStyle(fontSize: 30)),
+              // SizedBox(height: 20),
+              Text(
+                result,
+                style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: GridView.count(
+            crossAxisCount: 5, //max 5 widgets in a row in landscape
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            children: [
+              buildButton('1'),
+              buildButton('2'),
+              buildButton('3'),
+              buildButton('M'),
+              buildButton('C'),
+              buildButton('4'),
+              buildButton('5'),
+              buildButton('6'),
+              buildButton('+'),
+              buildButton('-'),
+              buildButton('7'),
+              buildButton('8'),
+              buildButton('9'),
+              buildButton('×'),
+              buildButton('÷'),
+              buildButton('%'),
+              buildButton('0'),
+              buildButton('.'),
+              buildButton('←'),
+              buildButton('='),
+              //SizedBox(height: 1),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
